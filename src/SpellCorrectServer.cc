@@ -1,0 +1,61 @@
+#include "../include/SpellcorrectServer.h"
+#include "../include/MyTask.h"
+#include "../include/Mydict.h"
+#include <iostream>
+
+using namespace std;
+
+namespace mm
+{
+SpellcorrectServer::SpellcorrectServer(const string & conffileName)
+:conf_(conffileName)
+,threadpool_(4,10)
+,server_(conf_.getConfigMap().find("ip")->second,stoi(conf_.getConfigMap().find("port")->second))
+{
+    threadpool_.start();
+    Mydict * pmydict=Mydict::createMydict();
+    pmydict->initEn(conf_.getConfigMap().find("dict")->second,
+                    conf_.getConfigMap().find("index")->second);//构建英文词典和索引表
+}
+
+//回调函数体现了扩展性
+void SpellcorrectServer::onConnection(const TcpConnectionPtr & conn)
+{
+	cout << conn->toString() << " has connected!" << endl;
+	conn->send("welcome to server.");
+}
+
+void SpellcorrectServer::onMessage(const TcpConnectionPtr & conn)
+{
+	cout << "onMessage...." << endl;
+	string msg = conn->receive();
+	cout << ">> receive msg from client: " << msg << endl;
+	//业务逻辑的处理要交给线程池处理
+	//decode
+	//compute
+	//encode
+	//::sleep(2);//碰到需要长时间的处理时，响应速度会降下来
+	//conn->send(msg);
+	MyTask task(msg, conn);
+
+	threadpool_.addTask(std::bind(&MyTask::process, task));
+}
+
+void SpellcorrectServer::onClose(const mm::TcpConnectionPtr & conn)
+{
+	cout << "onClose...." << endl;
+	cout << conn->toString() << " has closed!" << endl;
+}
+
+using namespace std::placeholders;
+void SpellcorrectServer::start()
+{
+	server_.setConnectionCallback(bind(&SpellcorrectServer::onConnection,this,_1));
+	server_.setMessageCallback(bind(&SpellcorrectServer::onMessage,this,_1));
+	server_.setCloseCallback(bind(&SpellcorrectServer::onClose,this,_1));
+    
+    server_.start();
+}
+
+}//end of namespace mm
+
