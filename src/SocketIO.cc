@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 
@@ -13,6 +14,29 @@ namespace mm
 SocketIO::SocketIO(int fd)
 : _fd(fd)
 {}
+
+int SocketIO::readTrain(char * buff)
+{
+    int dataLen;
+    recvCycle(&dataLen,4);//接收数据长度
+    int ret=recvCycle(buff,dataLen);//接收数据长度
+    return ret;
+}
+
+int SocketIO::recvCycle(void *p,int len)
+{
+    int ret,total=0;
+    char* pStart=(char*)p;
+    while(total<len)
+    {
+        ret=recv(_fd,pStart+total,len-total,0);
+        if(ret==0){
+            return -1;
+        }
+        total+=ret;
+    }
+    return total;
+}
 
 int SocketIO::readn(char * buff, int len)
 {
@@ -75,6 +99,14 @@ int SocketIO::recvPeek(char * buff, int len)
 	return ret;
 }
 
+int SocketIO::writeTrain(const char * buff,int len)
+{
+    Train train;
+    train.dataLen_=len;
+    strcpy(train.buf_,buff);
+    int ret=send(_fd,&train,4+train.dataLen_,0);
+    return ret;
+}
 	
 int SocketIO::writen(const char * buff, int len)
 {

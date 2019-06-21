@@ -13,8 +13,8 @@ namespace mm
 TcpConnection::TcpConnection(int fd, EventLoop * loop)
 : _sock(fd)
 , _socketIo(fd)
-, _localAddr(getLocalAddr(fd))
-, _peerAddr(getPeerAddr(fd))
+, _localAddr(getLocalAddr())
+, _peerAddr(getPeerAddr())
 , _isShutdwonWrite(false)
 , _loop(loop)
 {
@@ -30,13 +30,15 @@ TcpConnection::~TcpConnection()
 string TcpConnection::receive()
 {
 	char buff[65536] = {0};
-	_socketIo.readline(buff, sizeof(buff));
+	//_socketIo.readline(buff, sizeof(buff));
+    _socketIo.readTrain(buff);
 	return string(buff);
 }
 	
 void TcpConnection::send(const string & msg)
 {
-	_socketIo.writen(msg.c_str(), msg.size());
+	//_socketIo.writen(msg.c_str(), msg.size());
+	_socketIo.writeTrain(msg.c_str(), msg.size());
 }
 
 void TcpConnection::sendInLoop(const string & msg)
@@ -61,7 +63,7 @@ string TcpConnection::toString() const
 }
 
 
-InetAddress TcpConnection::getLocalAddr(int fd)
+InetAddress TcpConnection::getLocalAddr()
 {
 	struct sockaddr_in addr;
 	socklen_t len = sizeof(struct sockaddr);
@@ -71,7 +73,7 @@ InetAddress TcpConnection::getLocalAddr(int fd)
 	return InetAddress(addr);
 }
 
-InetAddress TcpConnection::getPeerAddr(int fd)
+InetAddress TcpConnection::getPeerAddr()
 {
 	struct sockaddr_in addr;
 	socklen_t len = sizeof(struct sockaddr);

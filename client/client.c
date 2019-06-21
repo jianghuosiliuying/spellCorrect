@@ -13,6 +13,12 @@
         exit(EXIT_FAILURE);\
     }while(0)
 
+struct Train
+{
+    int dataLen;
+    char buf[4096];
+};
+
 void do_service(int sockfd);
 
 int main(int argc, const char *argv[])
@@ -40,22 +46,36 @@ int main(int argc, const char *argv[])
     return 0;
 }
 
-
-
 void do_service(int sockfd)
 {
-    char recvbuf[1024] = {0};
-    char sendbuf[1024] = {0};
+    char recvbuf[4096] = {0};
+    char sendbuf[4096] = {0};
     while(1)
     {
+        struct Train train;
         //scanf("%s",sendbuf);
         //printf("%s\n",sendbuf);
+    fgets:
         fgets(sendbuf, sizeof sendbuf, stdin);
-        write(sockfd, sendbuf, strlen(sendbuf));
+        char word[4096]={0};
+        int k=0;
+        for(int i=0;i<(int)strlen(sendbuf);++i)
+        {
+            if((sendbuf[i]>='a'&&sendbuf[i]<='z')||(sendbuf[i]>='A'&&sendbuf[i]<='Z'))
+                word[k++]=sendbuf[i];
+        }
+        int len=strlen(word);
+        if(0==len)
+            goto fgets;
+        train.dataLen=strlen(word);
+        strcpy(train.buf,word);
+        write(sockfd, &train, 4+train.dataLen);
 		//sleep(5);
 
         //read
-        int nread = read(sockfd, recvbuf, sizeof recvbuf);
+        int dataLen;
+        recv(sockfd,&dataLen,4,0);
+        int nread = read(sockfd, recvbuf, dataLen);
         if(nread == -1)
         {
             if(errno == EINTR)
@@ -75,7 +95,4 @@ void do_service(int sockfd)
         memset(sendbuf, 0, sizeof sendbuf);
     }
 }
-
-
-
 

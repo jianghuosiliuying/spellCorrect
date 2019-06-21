@@ -1,5 +1,5 @@
-INC_DIR:= ./include/
-SRC_DIR:= ./src/
+INC_DIR:= ./include/*
+SRC_DIR:= ./src/*
 SRCS:=$(wildcard *.cc)
 OBJS:= $(patsubst %.cc, %.o, $(SRCS))
 LIBS:= -lpthread

@@ -44,8 +44,8 @@ public:
 	void handleMessageCallback();
 	void handleCloseCallback();
 private:
-	InetAddress getLocalAddr(int fd);
-	InetAddress getPeerAddr(int fd);
+	InetAddress getLocalAddr();
+	InetAddress getPeerAddr();
 private:
 	Socket _sock;
 	SocketIO _socketIo;
