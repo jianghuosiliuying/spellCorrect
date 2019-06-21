@@ -5,8 +5,10 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <sys/socket.h>
-
+#include <iostream>
 #include <sstream>
+
+using namespace std;
 
 namespace mm
 {
@@ -38,7 +40,9 @@ string TcpConnection::receive()
 void TcpConnection::send(const string & msg)
 {
 	//_socketIo.writen(msg.c_str(), msg.size());
+    //cout<<"will send:"<<msg<<"--"<<endl;
 	_socketIo.writeTrain(msg.c_str(), msg.size());
+    //cout<<"++"<<msg<<endl;
 }
 
 void TcpConnection::sendInLoop(const string & msg)

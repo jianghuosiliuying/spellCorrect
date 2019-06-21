@@ -1,6 +1,7 @@
 #include "../include/MyTask.h"
 #include "../include/TcpConnection.h"
 #include "../include/Mydict.h"
+#include "../include/json/json.h"
 #include <iostream>
 #include <map>
 #include <vector>
@@ -30,7 +31,8 @@ void MyTask::process()
         resultQue_.push(result);
     }
 	//encode
-	string response = resultQue_.top().word_;//要返回给客户端的消息
+	string response;
+    createJson(response);//要返回给客户端的消息
 	//string response = _msg;//要返回给客户端的消息
 	//_conn->send(response);//由线程池的线程(计算线程)完成数据的发送,在设计上来说，是不合理的
 						  //数据发送的工作要交还给IO线程(Reactor所在的线程)完成
@@ -38,6 +40,24 @@ void MyTask::process()
 	_conn->sendInLoop(response);
 }
 //void MyTask::execute(Cache & cache);//执行查询
+void MyTask::createJson(string & response)//建立json
+{
+    Json::Value root;
+    Json::Value data;
+    ostringstream os;
+    for(int i=0;!resultQue_.empty() && i<3;++i)
+    {//建立json数组
+        data[i]=resultQue_.top().word_;
+        resultQue_.pop();
+    }
+    root["word"]=data;
+    Json::StreamWriterBuilder writer;
+    unique_ptr<Json::StreamWriter> jsonwriter(writer.newStreamWriter());
+    jsonwriter->write(root,&os);
+    response=os.str();
+    cout<<response<<endl;
+    //return response;
+}
 void MyTask::queryIndexTable()//查询索引
 {
     Mydict * pmydict=Mydict::createMydict();//

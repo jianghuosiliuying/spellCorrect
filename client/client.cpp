@@ -1,3 +1,4 @@
+#include "../include/json/json.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -7,6 +8,12 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <iostream>
+#include <string>
+#include <memory>
+
+using namespace std;
+
 #define ERR_EXIT(m) \
     do { \
         perror(m);\
@@ -39,11 +46,38 @@ int main(int argc, const char *argv[])
 
 	char buf[1024];
 	memset(buf, 0, sizeof(buf));
-	read(peerfd, buf, sizeof(buf));
+        int dataLen;
+        int nread;
+        recv(peerfd,&dataLen,4,0);
+        nread = read(peerfd, buf, dataLen);
+	//read(peerfd, buf, sizeof(buf));
 	printf("%s\n", buf);
 
     do_service(peerfd);
     return 0;
+}
+
+bool parseJson(const string & data)
+{
+    if(data.empty())
+        return false;
+    bool res;
+    JSONCPP_STRING errs;
+    Json::Value root,word;
+    Json::CharReaderBuilder reader;
+    unique_ptr<Json::CharReader> const jsonreaer(reader.newCharReader());
+    res=jsonreaer->parse(data.c_str(),data.c_str()+data.length(),&root,&errs);
+    if(!res||!errs.empty()){
+        cout<<"parseJosn error."<<errs<<endl;
+    }
+    word=root["word"];
+    cout<<"similar word:";
+    for(unsigned int i=0;i<word.size();++i)
+    {
+        cout<<word[i]<<" ";
+    }
+    cout<<endl;
+    return true;
 }
 
 void do_service(int sockfd)
@@ -52,9 +86,9 @@ void do_service(int sockfd)
     char sendbuf[4096] = {0};
     while(1)
     {
+        int dataLen;
+        int nread;
         struct Train train;
-        //scanf("%s",sendbuf);
-        //printf("%s\n",sendbuf);
     fgets:
         fgets(sendbuf, sizeof sendbuf, stdin);
         char word[4096]={0};
@@ -69,13 +103,12 @@ void do_service(int sockfd)
             goto fgets;
         train.dataLen=strlen(word);
         strcpy(train.buf,word);
-        write(sockfd, &train, 4+train.dataLen);
+        write(sockfd, &train, 4+train.dataLen);//发送单词
 		//sleep(5);
 
         //read
-        int dataLen;
         recv(sockfd,&dataLen,4,0);
-        int nread = read(sockfd, recvbuf, dataLen);
+        nread = read(sockfd, recvbuf, dataLen);
         if(nread == -1)
         {
             if(errno == EINTR)
@@ -88,8 +121,10 @@ void do_service(int sockfd)
             close(sockfd);
             exit(EXIT_SUCCESS);
         }
-
-        printf("receive msg : %s\n", recvbuf);
+        
+        string data(recvbuf);
+        parseJson(data);//解析json
+        //printf("receive msg : %s\n", recvbuf);
 
         memset(recvbuf, 0, sizeof recvbuf);
         memset(sendbuf, 0, sizeof sendbuf);

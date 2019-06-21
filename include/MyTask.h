@@ -45,6 +45,7 @@ public:
     void queryIndexTable();//查询索引
     void statistic();//计算出下标对应的单词并存储
     int distance(const string & rhs);//计算最小编辑距离
+    void createJson(string & response);//创建json字符串
     //void response(Cache & cache);//响应客户端请求
 private:
 	string _msg;//等待查询的单词
