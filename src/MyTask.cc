@@ -1,3 +1,9 @@
+#if defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#elif defined(_MSC_VER)
+#pragma warning(disable : 4996)
+#endif
 #include "../include/MyTask.h"
 #include "../include/TcpConnection.h"
 #include "../include/Mydict.h"
@@ -44,19 +50,20 @@ void MyTask::createJson(string & response)//建立json
 {
     Json::Value root;
     Json::Value data;
-    ostringstream os;
-    for(int i=0;!resultQue_.empty() && i<3;++i)
+    for(int i=0;!resultQue_.empty() && i<5;++i)
     {//建立json数组
         data[i]=resultQue_.top().word_;
         resultQue_.pop();
     }
-    root["word"]=data;
-    Json::StreamWriterBuilder writer;
-    unique_ptr<Json::StreamWriter> jsonwriter(writer.newStreamWriter());
-    jsonwriter->write(root,&os);
-    response=os.str();
+    root[_msg]=data;
+    Json::FastWriter writer;
+    response=writer.write(root);
+    //ostringstream os;
+    //Json::StreamWriterBuilder writer;
+    //unique_ptr<Json::StreamWriter> jsonwriter(writer.newStreamWriter());
+    //jsonwriter->write(root,&os);
+    //response=os.str();
     cout<<response<<endl;
-    //return response;
 }
 void MyTask::queryIndexTable()//查询索引
 {

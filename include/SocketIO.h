@@ -23,7 +23,7 @@ public:
 	int readn(char * buff, int len);
 	int readline(char * buff, int maxlen);
 	int writen(const char * buff, int len);
-	int writeTrain(const char * buff, int len);//小火车发送，最大4096
+	int writeTrain(const char * buff);//小火车发送，最大4096
 private:
 	int recvPeek(char * buff, int len);
 

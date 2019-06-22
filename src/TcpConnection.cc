@@ -40,9 +40,9 @@ string TcpConnection::receive()
 void TcpConnection::send(const string & msg)
 {
 	//_socketIo.writen(msg.c_str(), msg.size());
-    //cout<<"will send:"<<msg<<"--"<<endl;
-	_socketIo.writeTrain(msg.c_str(), msg.size());
-    //cout<<"++"<<msg<<endl;
+    //cout<<"will send:"<<msg<<"--"<<msg.size()<<endl;
+	_socketIo.writeTrain(msg.c_str());
+    //cout<<"++"<<msg<<"--"<<msg.size()<<endl;
 }
 
 void TcpConnection::sendInLoop(const string & msg)

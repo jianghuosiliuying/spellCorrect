@@ -57,24 +57,24 @@ int main(int argc, const char *argv[])
     return 0;
 }
 
-bool parseJson(const string & data)
+bool parseJson(const string & data,char * word)
 {
     if(data.empty())
         return false;
     bool res;
     JSONCPP_STRING errs;
-    Json::Value root,word;
+    Json::Value root,info;
     Json::CharReaderBuilder reader;
     unique_ptr<Json::CharReader> const jsonreaer(reader.newCharReader());
     res=jsonreaer->parse(data.c_str(),data.c_str()+data.length(),&root,&errs);
     if(!res||!errs.empty()){
         cout<<"parseJosn error."<<errs<<endl;
     }
-    word=root["word"];
+    info=root[word];
     cout<<"similar word:";
-    for(unsigned int i=0;i<word.size();++i)
+    for(unsigned int i=0;i<info.size();++i)
     {
-        cout<<word[i]<<" ";
+        cout<<info[i]<<" ";
     }
     cout<<endl;
     return true;
@@ -108,7 +108,9 @@ void do_service(int sockfd)
 
         //read
         recv(sockfd,&dataLen,4,0);
+        cout<<"dataLen="<<dataLen<<endl;
         nread = read(sockfd, recvbuf, dataLen);
+        //cout<<"recvbuf="<<recvbuf<<" nread="<<nread<<endl;
         if(nread == -1)
         {
             if(errno == EINTR)
@@ -123,7 +125,7 @@ void do_service(int sockfd)
         }
         
         string data(recvbuf);
-        parseJson(data);//解析json
+        parseJson(data,word);//解析json
         //printf("receive msg : %s\n", recvbuf);
 
         memset(recvbuf, 0, sizeof recvbuf);

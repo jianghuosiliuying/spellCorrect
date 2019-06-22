@@ -7,6 +7,9 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <iostream>
+
+using namespace std;
 
 namespace mm
 {
@@ -99,12 +102,13 @@ int SocketIO::recvPeek(char * buff, int len)
 	return ret;
 }
 
-int SocketIO::writeTrain(const char * buff,int len)
+int SocketIO::writeTrain(const char * buff)
 {
     Train train;
-    train.dataLen_=len;
+    train.dataLen_=strlen(buff);
     strcpy(train.buf_,buff);
     int ret=send(_fd,&train,4+train.dataLen_,0);
+    //cout<<"++"<<train.buf_<<"--"<<ret<<endl;
     return ret;
 }
 	
