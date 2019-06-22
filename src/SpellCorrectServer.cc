@@ -1,6 +1,7 @@
 #include "../include/SpellcorrectServer.h"
 #include "../include/MyTask.h"
 #include "../include/Mydict.h"
+#include "../include/Configuration.h"
 #include <iostream>
 
 using namespace std;
@@ -8,14 +9,15 @@ using namespace std;
 namespace mm
 {
 SpellcorrectServer::SpellcorrectServer(const string & conffileName)
-:conf_(conffileName)
-,threadpool_(4,10)
-,server_(conf_.getConfigMap().find("ip")->second,stoi(conf_.getConfigMap().find("port")->second))
+:conf_(Configuration::createConfiguration()->initConf(conffileName))//初始化配置信息
+,threadpool_(stoi(conf_->getConfigMap()["threadNum"]),
+             stoi(conf_->getConfigMap().find("queSize")->second))
+,server_(conf_->getConfigMap().find("ip")->second,stoi(conf_->getConfigMap().find("port")->second))
 {
+    Mydict * pmydict=Mydict::createMydict();//也可以放到Mydict构造函数里
+    pmydict->initEn(conf_->getConfigMap().find("dict")->second,
+                    conf_->getConfigMap().find("index")->second);//构建英文词典和索引表
     threadpool_.start();
-    Mydict * pmydict=Mydict::createMydict();
-    pmydict->initEn(conf_.getConfigMap().find("dict")->second,
-                    conf_.getConfigMap().find("index")->second);//构建英文词典和索引表
 }
 
 //回调函数体现了扩展性

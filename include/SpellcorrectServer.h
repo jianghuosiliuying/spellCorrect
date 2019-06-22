@@ -19,7 +19,7 @@ public:
 	void start();
 
 private:
-    Configuration conf_;
+    Configuration * conf_;//更改为单例模式
 	Threadpool threadpool_;
 	TcpServer server_;
 };
