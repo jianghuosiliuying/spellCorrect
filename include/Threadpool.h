@@ -11,6 +11,7 @@ using std::unique_ptr;
 
 namespace mm
 {
+//extern __thread int threadNum;
 
 using Task = std::function<void()>;
 //class Thread;

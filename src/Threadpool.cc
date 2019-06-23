@@ -1,5 +1,5 @@
 #include "../include/Threadpool.h"
-#include "../include/Thread.h"
+//#include "../include/Thread.h"
 
 #include <unistd.h>
 
@@ -9,9 +9,10 @@ using std::endl;
 
 namespace mm 
 {
+//__thread int threadNum=0;
 
-Threadpool::Threadpool(size_t threadNum, size_t queSize)
-: _threadNum(threadNum)
+Threadpool::Threadpool(size_t Num, size_t queSize)
+: _threadNum(Num)
 , _queSize(queSize)
 , _que(_queSize) 
 , _isExit(false)
@@ -22,10 +23,9 @@ Threadpool::Threadpool(size_t threadNum, size_t queSize)
 
 void Threadpool::start()
 {
-	for(size_t idx = 0; idx != _threadNum; ++idx) {
+	for(size_t idx = 1; idx <= _threadNum; ++idx) {
 		unique_ptr<Thread> thread(new Thread(
-			std::bind(&Threadpool::threadFunc, this)
-		));
+			std::bind(&Threadpool::threadFunc, this),idx));
 		_threads.push_back(std::move(thread));
 	}
 

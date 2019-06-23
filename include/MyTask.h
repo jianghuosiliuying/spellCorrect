@@ -9,7 +9,7 @@ using namespace std;
 
 namespace mm
 {
-
+class CacheManger;
 class TcpConnection;
 using TcpConnectionPtr = std::shared_ptr<TcpConnection>;
 
@@ -50,6 +50,7 @@ public:
 private:
 	string _msg;//等待查询的单词
 	TcpConnectionPtr _conn;
+    CacheManger * pcacheM_;
     set<int> location_;//与目标单词相关所有单词下标的集合
     vector<pair<string,int> > findset_;//与目标单词相关所有单词的集合
     priority_queue<MyResult,vector<MyResult>,MyCompare> resultQue_;//查询结果优先级队列

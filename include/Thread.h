@@ -6,13 +6,14 @@
 
 namespace mm
 {
+extern __thread int threadNum;
 
 class Thread
 : Noncopyable
 {
 public:
 	using ThreadCallback = std::function<void()>;
-	Thread(ThreadCallback && cb);
+	Thread(ThreadCallback && cb,int Num);
 
 	void start();
 	void join();
@@ -26,6 +27,7 @@ private:
 	pthread_t _pthid;
 	ThreadCallback _cb;
 	bool _isRunning; 
+    int Num_;
 };
 
 }//end of namespace mm

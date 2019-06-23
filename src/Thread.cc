@@ -5,26 +5,51 @@ using std::endl;
 
 namespace mm
 {
+__thread int threadNum=0;
 
-Thread::Thread(ThreadCallback && cb)
+using ThreadCallback=std::function<void()>;
+struct ThreadData
+{
+    int Num_;
+    ThreadCallback cb_;
+    ThreadData(const int Num,ThreadCallback cb)
+    :Num_(Num)
+    ,cb_(cb)
+    {}
+    void runInThread()
+    {
+        //任务执行之前: do something
+        threadNum=Num_;
+        cout<<"I am "<<threadNum<<" thread"<<endl;
+        if(cb_)
+            cb_();
+        //任务执行之后: do something....
+    }
+};
+
+Thread::Thread(ThreadCallback && cb,int Num)
 : _pthid(0)
 , _cb(std::move(cb))
 , _isRunning(false)
+,Num_(Num)
 {
-	cout << "Thread()" << endl;
+	cout <<Num_<< " Thread()" << endl;
 }
 
 void Thread::start()
 {
-	pthread_create(&_pthid, NULL, threadFunc, this);	
+    ThreadData * data=new ThreadData(Num_,_cb);
+	if(pthread_create(&_pthid, NULL, threadFunc, data))
+        perror("pthread_create");
 	_isRunning = true;
 }
 
 void * Thread::threadFunc(void * arg)
 {
-	Thread * pthread = static_cast<Thread*>(arg);
-	if(pthread)
-		pthread->_cb();
+	ThreadData * pdata = static_cast<ThreadData*>(arg);
+	if(pdata)
+		pdata->runInThread();
+    delete pdata;
 
 	return nullptr;
 }
@@ -40,7 +65,7 @@ Thread::~Thread()
 	if(_isRunning) {
 		pthread_detach(_pthid);	
 	}
-	cout << "~Thread()" << endl;
+	cout <<threadNum<< "~Thread()" << endl;
 }
 
 }//end of namespace mm

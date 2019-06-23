@@ -8,6 +8,8 @@
 #include "../include/TcpConnection.h"
 #include "../include/Mydict.h"
 #include "../include/json/json.h"
+#include "../include/Thread.h"
+#include "../include/CacheManger.h"
 #include <iostream>
 #include <map>
 #include <vector>
@@ -19,30 +21,43 @@ namespace mm
 MyTask::MyTask(const string & msg,const mm::TcpConnectionPtr & conn)
 : _msg(msg)//待查询单词
 , _conn(conn)
+,pcacheM_(CacheManger::createCacheManger())//拿到cacheManger对象指针
 {}
 
 //运行在线程池的某一个子线程中
 void MyTask::process()
 {
-	//decode
-    queryIndexTable();
-    statistic();
-	//compute
-    MyResult result;
-    for(auto & word_cnt:findset_)
-    {
-        result.word_=word_cnt.first;
-        result.iFreq_=word_cnt.second;
-        result.iDist_=distance(word_cnt.first);
-        resultQue_.push(result);
-    }
-	//encode
 	string response;
-    createJson(response);//要返回给客户端的消息
+    cout<<"i am "<<threadNum<<" thread, id="<<pthread_self()<<endl;
+	//decode
+    unordered_map<string,string> tmp=pcacheM_->getCache(threadNum).getCacheMap();
+    auto it=tmp.find(_msg);
+    if(it!=tmp.end()){//缓存命中
+        cout<<"cache "<<threadNum<<" is hit."<<endl;
+        response=it->second;
+        //cout<<response<<endl;
+    }else{//缓存未命中
+        cout<<"cache "<<threadNum<<" is not hit, will compute."<<endl;
+        queryIndexTable();
+        statistic();
+	    //compute
+        MyResult result;
+        for(auto & word_cnt:findset_)
+        {
+            result.word_=word_cnt.first;
+            result.iFreq_=word_cnt.second;
+            result.iDist_=distance(word_cnt.first);
+            resultQue_.push(result);
+        }
+	    //encode
+        createJson(response);//要返回给客户端的消息
+        pcacheM_->getCache(threadNum).getCacheMap().insert(make_pair(_msg,response));
+    }
 	//string response = _msg;//要返回给客户端的消息
 	//_conn->send(response);//由线程池的线程(计算线程)完成数据的发送,在设计上来说，是不合理的
 						  //数据发送的工作要交还给IO线程(Reactor所在的线程)完成
 						  //将send的函数的执行延迟到IO线程取操作
+    cout<<response<<endl;
 	_conn->sendInLoop(response);
 }
 //void MyTask::execute(Cache & cache);//执行查询
@@ -63,7 +78,6 @@ void MyTask::createJson(string & response)//建立json
     //unique_ptr<Json::StreamWriter> jsonwriter(writer.newStreamWriter());
     //jsonwriter->write(root,&os);
     //response=os.str();
-    cout<<response<<endl;
 }
 void MyTask::queryIndexTable()//查询索引
 {
