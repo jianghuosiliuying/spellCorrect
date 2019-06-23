@@ -1,6 +1,7 @@
 #include "../include/SpellcorrectServer.h"
 #include "../include/MyTask.h"
 #include "../include/Mydict.h"
+#include "../include/CacheManger.h"
 #include "../include/Configuration.h"
 #include <iostream>
 
@@ -9,11 +10,17 @@ using namespace std;
 namespace mm
 {
 SpellcorrectServer::SpellcorrectServer(const string & conffileName)
+//SpellcorrectServer::SpellcorrectServer()
 :conf_(Configuration::createConfiguration()->initConf(conffileName))//初始化配置信息
-,threadpool_(stoi(conf_->getConfigMap()["threadNum"]),
+//:conf_(Configuration::createConfiguration())//初始化配置信息
+,cacheM_(CacheManger::createCacheManger()->init())//初始化主cache,并首次同步cache
+,threadpool_(stoi(conf_->getConfigMap().find("threadNum")->second),
              stoi(conf_->getConfigMap().find("queSize")->second))
+//,threadpool_(4,10)
 ,server_(conf_->getConfigMap().find("ip")->second,stoi(conf_->getConfigMap().find("port")->second))
 {
+    cout<<stoi(conf_->getConfigMap().find("threadNum")->second)<<endl;
+    cout<<stoi(conf_->getConfigMap()["threadNum"])<<endl;
     Mydict * pmydict=Mydict::createMydict();//也可以放到Mydict构造函数里
     pmydict->initEn(conf_->getConfigMap().find("dict")->second,
                     conf_->getConfigMap().find("index")->second);//构建英文词典和索引表

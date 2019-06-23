@@ -4,6 +4,7 @@
 #include <map>
 #include <set>
 #include <string>
+#include <iostream>
 
 using namespace std;
 
@@ -21,7 +22,7 @@ public:
     void show_dict()const;//查看词典
     void show_index()const;
 private:
-    Mydict(){}
+    Mydict(){   cout<<"Mydict()"<<endl;  }
     ~Mydict(){}
 
 private:

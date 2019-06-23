@@ -6,10 +6,12 @@
 
 namespace mm
 {
-CacheManger::CacheManger() 
+CacheManger * CacheManger::init() 
 {
-    Configuration * pconf=Configuration::createConfiguration();
-    cacheList_.reserve();
+    pconf_=Configuration::createConfiguration();
+    int cacheNum=stoi(pconf_->getConfigMap()["cacheNum"]);
+    cacheList_.reserve(cacheNum);//cache数量为子线程和主线程总和
+    return pCacheManger_;
 }
 CacheManger * CacheManger::createCacheManger()
 {

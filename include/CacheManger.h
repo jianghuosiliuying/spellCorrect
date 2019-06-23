@@ -2,25 +2,28 @@
 
 #include <vector>
 #include <string>
+#include <iostream>
 
 using namespace std;
 
 namespace mm
 {
 class Cache;
+class Configuration;
 class CacheManger
 {
 public:
     static CacheManger * createCacheManger();
     static void destory();
-    void init(string);
+    CacheManger * init();//初始化cache数量，并首次同步cache
     Cache & getCache(size_t);
     void periodicUpdate();
 private:
-    CacheManger();
+    CacheManger(){  cout<<"CacheManger()"<<endl;  }
     ~CacheManger() {}
 private:
     static CacheManger * pCacheManger_;
+    Configuration * pconf_;
     vector<Cache> cacheList_;
 };
 

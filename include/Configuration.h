@@ -2,9 +2,9 @@
 
 #include <string>
 #include <map>
+#include <iostream>
 
-using std::string;
-using std::map;
+using namespace std;
 
 namespace mm
 {
@@ -17,7 +17,7 @@ public:
     map<string,string> & getConfigMap();
     void show_conf()const;
 private:
-    Configuration();
+    Configuration(){    cout<<"Configuration()"<<endl;  }
     ~Configuration(){}
 private:
     static Configuration * pConf_;

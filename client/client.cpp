@@ -37,7 +37,7 @@ int main(int argc, const char *argv[])
     struct sockaddr_in addr;
     memset(&addr, 0, sizeof addr);
     addr.sin_family = AF_INET;
-    addr.sin_addr.s_addr = inet_addr("192.168.3.204"); //localhost
+    addr.sin_addr.s_addr = inet_addr("192.168.80.128"); //localhost
     //addr.sin_addr.s_addr = INADDR_ANY; //localhost
     addr.sin_port = htons(2000);
     socklen_t len = sizeof addr;
@@ -108,7 +108,7 @@ void do_service(int sockfd)
 
         //read
         recv(sockfd,&dataLen,4,0);
-        cout<<"dataLen="<<dataLen<<endl;
+        //cout<<"dataLen="<<dataLen<<endl;
         nread = read(sockfd, recvbuf, dataLen);
         //cout<<"recvbuf="<<recvbuf<<" nread="<<nread<<endl;
         if(nread == -1)
