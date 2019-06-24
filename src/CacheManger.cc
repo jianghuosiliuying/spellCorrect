@@ -61,7 +61,8 @@ void CacheManger::writeToFile()
     Cache tmp=getCache(0);//获取0号cache
     for(auto & k:tmp.getCacheMap())
     {
-        ofs<<k.first<<" "<<k.second<<endl;
+        ofs<<k.first<<" "<<k.second;//每个json语句自带换行
+    //    cout<<k.first<<" "<<k.second<<endl;
     }
     ofs.close();
 }

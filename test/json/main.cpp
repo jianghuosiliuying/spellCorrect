@@ -26,9 +26,11 @@ string createJson()
     jsonwriter->write(root,&os);
 #endif
     Json::FastWriter writer;
-    string strData=writer.write(root);
+    string strData=writer.write(root);//自带换行
     //string strData=os.str();
     cout<<strData;
+    const char *str=strData.c_str();
+    string str1(str);
     //cout<<strData<<endl;
     return strData;
 }

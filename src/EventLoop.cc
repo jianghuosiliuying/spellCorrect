@@ -78,12 +78,13 @@ void EventLoop::waitEpollFd()
 			} else if(fd == _eventfd) {//处理旧连接给客户端发数据
 				if(_eventList[idx].events & EPOLLIN) {
 					handleSendRead();
-					cout << ">>before doPendingFunctors()" << endl;
+					//cout << ">>before doPendingFunctors()" << endl;
 					doPendingFunctors();//在这里发送数据
-					cout << ">>after doPendingFunctors()" << endl;
+					//cout << ">>after doPendingFunctors()" << endl;
 				}
             }else if(fd==timerfd_){//处理时间超时回写事件
                 if(_eventList[idx].events & EPOLLIN){
+                    cout<<"i will handle update cache."<<endl;
                     pTimer_->Timer::handleRead();//包含读取描述符和执行回写事件
                 }
             } else {
