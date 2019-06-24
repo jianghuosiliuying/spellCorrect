@@ -11,14 +11,10 @@ class Cache
 {
 public:
     Cache() {}
+    Cache(unordered_map<string,string> & mainMap);
 //    Cache(const Cache & cache);
-    ~Cache() {}
-    //Cache & operator=(const Cache & cache);
     void addElement(string,string);
     unordered_map<string,string> & getCacheMap();
-    //void readFromFile(string);
-    //void writeToFile(string);
-    void update(const Cache &);
 private:
     unordered_map<string,string> table_;
 };

@@ -1,14 +1,14 @@
 #include "../include/EventLoop.h" 
 #include "../include/Acceptor.h"
+#include "../include/Timer.h"
 #include "../include/TcpConnection.h"
 
 #include <unistd.h>
 #include <assert.h>
 #include <sys/eventfd.h>
-
 #include <iostream>
-using std::cout;
-using std::endl;
+
+using namespace std;
 
 namespace mm
 {
@@ -16,12 +16,15 @@ namespace mm
 EventLoop::EventLoop(Acceptor & acceptor)
 : _efd(createEpollFd())
 , _eventfd(createEventFd())
+,pTimer_(Timer::createTimer())
+,timerfd_(pTimer_->getFd())
 , _acceptor(acceptor)
 , _eventList(1024)
 , _isLooping(false)
 {
 	addEpollFdRead(_acceptor.fd());
 	addEpollFdRead(_eventfd);
+	addEpollFdRead(timerfd_);
 }
 
 void EventLoop::loop()
@@ -72,15 +75,19 @@ void EventLoop::waitEpollFd()
 				if(_eventList[idx].events & EPOLLIN) {
 					handleNewConnection();
 				}
-			} else if(fd == _eventfd) {
+			} else if(fd == _eventfd) {//处理旧连接给客户端发数据
 				if(_eventList[idx].events & EPOLLIN) {
-					handleRead();
+					handleSendRead();
 					cout << ">>before doPendingFunctors()" << endl;
 					doPendingFunctors();//在这里发送数据
 					cout << ">>after doPendingFunctors()" << endl;
 				}
-			} else {
-				//处理消息
+            }else if(fd==timerfd_){//处理时间超时回写事件
+                if(_eventList[idx].events & EPOLLIN){
+                    pTimer_->Timer::handleRead();//包含读取描述符和执行回写事件
+                }
+            } else {
+				//处理消息,接收客户端数据
 				if(_eventList[idx].events & EPOLLIN) {
 					handleMessage(fd);
 				}
@@ -118,8 +125,8 @@ void EventLoop::handleMessage(int fd)
 	}
 }
 
-void EventLoop::handleRead()
-{
+void EventLoop::handleSendRead()
+{//子线程完成计算，通知主线程向客户端发送数据
 	uint64_t howmany;
 	int ret = ::read(_eventfd, &howmany, sizeof(howmany));
 	if(ret != sizeof(howmany)) {
@@ -128,7 +135,7 @@ void EventLoop::handleRead()
 }
 
 void EventLoop::wakeup()
-{
+{//唤醒子线程进行计算
 	uint64_t one = 1;
 	int ret = ::write(_eventfd, &one, sizeof(one));
 	if(ret != sizeof(one)) {

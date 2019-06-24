@@ -1,9 +1,8 @@
 #pragma once
 
 #include "MutexLock.h"
-
+//#include "Timer.h"
 #include <sys/epoll.h>
-
 #include <map>
 #include <memory>
 #include <vector>
@@ -16,7 +15,7 @@ namespace mm
 {
 class Acceptor;
 class TcpConnection;
-
+class Timer;
 class EventLoop
 {
 public:
@@ -39,7 +38,7 @@ private:
 	void waitEpollFd();
 	void handleNewConnection();
 	void handleMessage(int fd);
-	void handleRead();
+	void handleSendRead();
 	void wakeup();
 	int createEpollFd();
 	int createEventFd();
@@ -52,6 +51,8 @@ private:
 private:
 	int _efd;
 	int _eventfd;
+    Timer * pTimer_;
+    int timerfd_;
 	Acceptor & _acceptor;
 	vector<struct epoll_event> _eventList;
 	map<int, TcpConnectionPtr> _conns;

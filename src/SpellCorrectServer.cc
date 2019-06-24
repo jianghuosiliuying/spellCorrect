@@ -3,6 +3,7 @@
 #include "../include/Mydict.h"
 #include "../include/CacheManger.h"
 #include "../include/Configuration.h"
+#include "../include/Timer.h"
 #include <iostream>
 
 using namespace std;
@@ -10,10 +11,13 @@ using namespace std;
 namespace mm
 {
 SpellcorrectServer::SpellcorrectServer(const string & conffileName)
-//SpellcorrectServer::SpellcorrectServer()
 :conf_(Configuration::createConfiguration()->initConf(conffileName))//初始化配置信息
-//:conf_(Configuration::createConfiguration())//初始化配置信息
 ,cacheM_(CacheManger::createCacheManger()->init())//初始化主cache,并首次同步cache
+,timer_(Timer::createTimer()->initTime(
+        stoi(conf_->getConfigMap().find("begTime")->second),
+        stoi(conf_->getConfigMap().find("valTime")->second),
+        bind(&CacheManger::periodicUpdate,cacheM_)
+        ))
 ,threadpool_(stoi(conf_->getConfigMap().find("threadNum")->second),
              stoi(conf_->getConfigMap().find("queSize")->second))
 //,threadpool_(4,10)
@@ -23,6 +27,7 @@ SpellcorrectServer::SpellcorrectServer(const string & conffileName)
     pmydict->initEn(conf_->getConfigMap().find("dict")->second,
                     conf_->getConfigMap().find("index")->second);//构建英文词典和索引表
     threadpool_.start();
+    timer_->start();
 }
 
 //回调函数体现了扩展性

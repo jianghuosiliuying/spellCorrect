@@ -2,9 +2,11 @@
 
 #include "../include/Threadpool.h"
 #include "../include/TcpServer.h"
+//#include "../include/Timer.h"
 
 namespace mm
 {
+class Timer;
 class Configuration;
 class CacheManger;
 class Threadpool;
@@ -22,6 +24,7 @@ public:
 private:
     Configuration * conf_;//更改为单例模式
     CacheManger * cacheM_;
+    Timer * timer_;
 	Threadpool threadpool_;
 	TcpServer server_;
 };

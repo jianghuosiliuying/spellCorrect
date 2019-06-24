@@ -17,6 +17,7 @@ CZString	json/json_value.cpp	/^Value::CZString::CZString(ArrayIndex index) : cst
 CZString	json/json_value.cpp	/^Value::CZString::CZString(CZString&& other)$/;"	f	class:Json::Value::CZString
 CZString	json/json_value.cpp	/^Value::CZString::CZString(char const* str,$/;"	f	class:Json::Value::CZString
 CZString	json/json_value.cpp	/^Value::CZString::CZString(const CZString& other) {$/;"	f	class:Json::Value::CZString
+Cache	Cache.cc	/^Cache::Cache(unordered_map<string,string> & mainMap)$/;"	f	class:mm::Cache
 Char	json/json_reader.cpp	/^  typedef char Char;$/;"	t	class:Json::OurReader	file:
 CharReaderBuilder	json/json_reader.cpp	/^CharReaderBuilder::CharReaderBuilder() { setDefaults(&settings_); }$/;"	f	class:Json::CharReaderBuilder
 CharReaderPtr	json/json_reader.cpp	/^typedef std::unique_ptr<CharReader> CharReaderPtr;$/;"	t	namespace:Json	file:
@@ -25,7 +26,6 @@ CommentStyle	json/json_writer.cpp	/^struct CommentStyle {$/;"	s	namespace:Json	f
 Comments	json/json_value.cpp	/^Value::Comments::Comments(Comments&& that)$/;"	f	class:Json::Value::Comments
 Comments	json/json_value.cpp	/^Value::Comments::Comments(const Comments& that)$/;"	f	class:Json::Value::Comments
 Condition	Condition.cc	/^Condition::Condition(MutexLock & mutex)$/;"	f	class:mm::Condition
-Configuration	Configuration.cc	/^Configuration::Configuration(const string& filepath)$/;"	f	class:mm::Configuration
 DictProducer	DictProducer.cc	/^DictProducer::DictProducer(const string & dir)$/;"	f	class:mm::DictProducer
 EXE	Makefile	/^EXE:=.\/server.exe$/;"	m
 Enum	json/json_writer.cpp	/^  enum Enum {$/;"	g	struct:Json::CommentStyle	file:
@@ -53,6 +53,7 @@ MutexLock	MutexLock.cc	/^MutexLock::MutexLock()$/;"	f	class:mm::MutexLock
 MyTask	MyTask.cc	/^MyTask::MyTask(const string & msg,const mm::TcpConnectionPtr & conn)$/;"	f	class:mm::MyTask
 Nodes	json/json_reader.cpp	/^  typedef std::stack<Value*> Nodes;$/;"	t	class:Json::OurReader	file:
 None	json/json_writer.cpp	/^    None, \/\/\/< Drop all comments.$/;"	e	enum:Json::CommentStyle::Enum	file:
+Num_	Thread.cc	/^    int Num_;$/;"	m	struct:mm::ThreadData	file:
 OBJS	Makefile	/^OBJS:= $(patsubst %.cc, %.o, $(SRCS))$/;"	m
 OurCharReader	json/json_reader.cpp	/^  OurCharReader(bool collectComments, OurFeatures const& features)$/;"	f	class:Json::OurCharReader
 OurCharReader	json/json_reader.cpp	/^class OurCharReader : public CharReader {$/;"	c	namespace:Json	file:
@@ -81,8 +82,10 @@ StyledStreamWriter	json/json_writer.cpp	/^StyledStreamWriter::StyledStreamWriter
 TaskQueue	TaskQueue.cc	/^TaskQueue::TaskQueue(size_t sz)$/;"	f	class:mm::TaskQueue
 TcpConnection	TcpConnection.cc	/^TcpConnection::TcpConnection(int fd, EventLoop * loop)$/;"	f	class:mm::TcpConnection
 TcpServer	TcpServer.cc	/^TcpServer::TcpServer(const string & ip, unsigned short port)$/;"	f	class:mm::TcpServer
-Thread	Thread.cc	/^Thread::Thread(ThreadCallback && cb)$/;"	f	class:mm::Thread
-Threadpool	Threadpool.cc	/^Threadpool::Threadpool(size_t threadNum, size_t queSize)$/;"	f	class:mm::Threadpool
+Thread	Thread.cc	/^Thread::Thread(ThreadCallback && cb,int Num)$/;"	f	class:mm::Thread
+ThreadData	Thread.cc	/^    ThreadData(const int Num,ThreadCallback cb)$/;"	f	struct:mm::ThreadData
+ThreadData	Thread.cc	/^struct ThreadData$/;"	s	namespace:mm	file:
+Threadpool	Threadpool.cc	/^Threadpool::Threadpool(size_t Num, size_t queSize)$/;"	f	class:mm::Threadpool
 Token	json/json_reader.cpp	/^  class Token {$/;"	c	class:Json::OurReader	file:
 TokenType	json/json_reader.cpp	/^  enum TokenType {$/;"	g	class:Json::OurReader	file:
 Value	json/json_value.cpp	/^Value::Value(Int value) {$/;"	f	class:Json::Value
@@ -105,6 +108,7 @@ accept	Acceptor.cc	/^int Acceptor::accept()$/;"	f	class:mm::Acceptor
 addChildValues_	json/json_writer.cpp	/^  bool addChildValues_ : 1;$/;"	m	struct:Json::BuiltStyledStreamWriter	file:
 addComment	json/json_reader.cpp	/^void OurReader::addComment(Location begin,$/;"	f	class:Json::OurReader
 addComment	json/json_reader.cpp	/^void Reader::addComment(Location begin,$/;"	f	class:Json::Reader
+addElement	Cache.cc	/^void Cache::addElement(string word,string json)$/;"	f	class:mm::Cache
 addEpollFdRead	EventLoop.cc	/^void EventLoop::addEpollFdRead(int fd)$/;"	f	class:mm::EventLoop
 addError	json/json_reader.cpp	/^bool OurReader::addError(const String& message, Token& token, Location extra) {$/;"	f	class:Json::OurReader
 addError	json/json_reader.cpp	/^bool Reader::addError(const String& message, Token& token, Location extra) {$/;"	f	class:Json::Reader
@@ -139,6 +143,7 @@ begin_	json/json_reader.cpp	/^  Location begin_;$/;"	m	class:Json::OurReader	fil
 bind	Acceptor.cc	/^void Acceptor::bind()$/;"	f	class:mm::Acceptor
 build_dict	DictProducer.cc	/^void DictProducer::build_dict()$/;"	f	class:mm::DictProducer
 build_index	IndexProducer.cc	/^void IndexProducer::build_index()$/;"	f	class:mm::IndexProducer
+cb_	Thread.cc	/^    ThreadCallback cb_;$/;"	m	struct:mm::ThreadData	file:
 childValues_	json/json_writer.cpp	/^  ChildValues childValues_;$/;"	m	struct:Json::BuiltStyledStreamWriter	file:
 clear	json/json_value.cpp	/^void Value::clear() {$/;"	f	class:Json::Value
 cloneUnique	json/json_value.cpp	/^static std::unique_ptr<T> cloneUnique(const std::unique_ptr<T>& p) {$/;"	f	namespace:Json
@@ -151,10 +156,14 @@ containsNewLine	json/json_reader.cpp	/^bool OurReader::containsNewLine(OurReader
 containsNewLine	json/json_reader.cpp	/^bool Reader::containsNewLine(Reader::Location begin, Reader::Location end) {$/;"	f	class:Json::Reader
 copy	json/json_value.cpp	/^void Value::copy(const Value& other) {$/;"	f	class:Json::Value
 copyPayload	json/json_value.cpp	/^void Value::copyPayload(const Value& other) {$/;"	f	class:Json::Value
+createCacheManger	CacheManger.cc	/^CacheManger * CacheManger::createCacheManger()$/;"	f	class:mm::CacheManger
+createConfiguration	Configuration.cc	/^Configuration * Configuration::createConfiguration()$/;"	f	class:mm::Configuration
 createEpollFd	EventLoop.cc	/^int EventLoop::createEpollFd()$/;"	f	class:mm::EventLoop
 createEventFd	EventLoop.cc	/^int EventLoop::createEventFd()$/;"	f	class:mm::EventLoop
 createJson	MyTask.cc	/^void MyTask::createJson(string & response)\/\/建立json$/;"	f	class:mm::MyTask
 createMydict	Mydict.cc	/^Mydict * Mydict::createMydict()$/;"	f	class:mm::Mydict
+createTimerFd	EventLoop.cc	/^int EventLoop::createTimerFd()$/;"	f	class:mm::EventLoop
+createTimerfd	Timer.cc	/^int Timer::createTimerfd()$/;"	f	class:mm::Timer
 cs_	json/json_writer.cpp	/^  CommentStyle::Enum cs_;$/;"	m	struct:Json::BuiltStyledStreamWriter	file:
 currentValue	json/json_reader.cpp	/^Value& OurReader::currentValue() { return *(nodes_.top()); }$/;"	f	class:Json::OurReader
 currentValue	json/json_reader.cpp	/^Value& Reader::currentValue() { return *(nodes_.top()); }$/;"	f	class:Json::Reader
@@ -180,7 +189,9 @@ decodeUnicodeEscapeSequence	json/json_reader.cpp	/^bool Reader::decodeUnicodeEsc
 defaultRealPrecision	json/json_value.cpp	/^const UInt Value::defaultRealPrecision = 17;$/;"	m	class:Json::Value	file:
 delEpollFdRead	EventLoop.cc	/^void EventLoop::delEpollFdRead(int fd)$/;"	f	class:mm::EventLoop
 demand	json/json_value.cpp	/^Value* Value::demand(char const* begin, char const* end) {$/;"	f	class:Json::Value
+destory	CacheManger.cc	/^void CacheManger::destory()$/;"	f	class:mm::CacheManger
 destory	Mydict.cc	/^void Mydict::destory()$/;"	f	class:mm::Mydict
+destroy	Configuration.cc	/^void Configuration::destroy()$/;"	f	class:mm::Configuration
 distance	MyTask.cc	/^int MyTask::distance(const string & word2)\/\/计算最小编辑距离$/;"	f	class:mm::MyTask
 doPendingFunctors	EventLoop.cc	/^void EventLoop::doPendingFunctors()$/;"	f	class:mm::EventLoop
 document_	json/json_reader.cpp	/^  String document_;$/;"	m	class:Json::OurReader	file:
@@ -211,6 +222,8 @@ get	json/json_value.cpp	/^Value Value::get(char const* begin,$/;"	f	class:Json::
 get	json/json_value.cpp	/^Value Value::get(char const* key, Value const& defaultValue) const {$/;"	f	class:Json::Value
 get	json/json_value.cpp	/^Value Value::get(const CppTL::ConstString& key,$/;"	f	class:Json::Value
 getCStringLength	json/json_value.cpp	/^unsigned Value::getCStringLength() const {$/;"	f	class:Json::Value
+getCache	CacheManger.cc	/^Cache & CacheManger::getCache(size_t idx)$/;"	f	class:mm::CacheManger
+getCacheMap	Cache.cc	/^unordered_map<string,string> & Cache::getCacheMap()$/;"	f	class:mm::Cache
 getComment	json/json_value.cpp	/^String Value::getComment(CommentPlacement placement) const {$/;"	f	class:Json::Value
 getConfigMap	Configuration.cc	/^map<string,string> & Configuration::getConfigMap()$/;"	f	class:mm::Configuration
 getDict	Mydict.cc	/^vector<pair<string,int> > & Mydict::getDict()$/;"	f	class:mm::Mydict
@@ -242,7 +255,9 @@ handleConnectionCallback	TcpConnection.cc	/^void TcpConnection::handleConnection
 handleMessage	EventLoop.cc	/^void EventLoop::handleMessage(int fd)$/;"	f	class:mm::EventLoop
 handleMessageCallback	TcpConnection.cc	/^void TcpConnection::handleMessageCallback()$/;"	f	class:mm::TcpConnection
 handleNewConnection	EventLoop.cc	/^void EventLoop::handleNewConnection()$/;"	f	class:mm::EventLoop
-handleRead	EventLoop.cc	/^void EventLoop::handleRead()$/;"	f	class:mm::EventLoop
+handleRead	Timer.cc	/^void Timer::handleRead()$/;"	f	class:mm::Timer
+handleSendRead	EventLoop.cc	/^void EventLoop::handleSendRead()$/;"	f	class:mm::EventLoop
+handleTimerRead	EventLoop.cc	/^void EventLoop::handleTimerRead()$/;"	f	class:mm::EventLoop
 has	json/json_value.cpp	/^bool Value::Comments::has(CommentPlacement slot) const {$/;"	f	class:Json::Value::Comments
 hasComment	json/json_value.cpp	/^bool Value::hasComment(CommentPlacement placement) const {$/;"	f	class:Json::Value
 hasCommentForValue	json/json_writer.cpp	/^bool BuiltStyledStreamWriter::hasCommentForValue(const Value& value) {$/;"	f	class:Json::BuiltStyledStreamWriter
@@ -256,7 +271,9 @@ indentString_	json/json_writer.cpp	/^  String indentString_;$/;"	m	struct:Json::
 indentation_	json/json_writer.cpp	/^  String indentation_;$/;"	m	struct:Json::BuiltStyledStreamWriter	file:
 indented_	json/json_writer.cpp	/^  bool indented_ : 1;$/;"	m	struct:Json::BuiltStyledStreamWriter	file:
 index	json/json_value.cpp	/^ArrayIndex Value::CZString::index() const { return index_; }$/;"	f	class:Json::Value::CZString
+init	CacheManger.cc	/^CacheManger * CacheManger::init() $/;"	f	class:mm::CacheManger
 initBasic	json/json_value.cpp	/^void Value::initBasic(ValueType type, bool allocated) {$/;"	f	class:Json::Value
+initConf	Configuration.cc	/^Configuration* Configuration::initConf(const string & filepath)$/;"	f	class:mm::Configuration
 initEn	Mydict.cc	/^void Mydict::initEn(const string dictEnPath,const string indexEnPath)$/;"	f	class:mm::Mydict
 integerToDouble	json/json_value.cpp	/^static inline double integerToDouble(Json::UInt64 value) {$/;"	f	namespace:Json
 integerToDouble	json/json_value.cpp	/^template <typename T> static inline double integerToDouble(T value) {$/;"	f	namespace:Json
@@ -301,7 +318,7 @@ length	json/json_value.cpp	/^unsigned Value::CZString::length() const { return s
 listen	Acceptor.cc	/^void Acceptor::listen()$/;"	f	class:mm::Acceptor
 lock	MutexLock.cc	/^void MutexLock::lock()$/;"	f	class:mm::MutexLock
 loop	EventLoop.cc	/^void EventLoop::loop()$/;"	f	class:mm::EventLoop
-main	TestSpellCorrectServer.cc	/^int main(void)$/;"	f
+main	TestSpellCorrectServer.cc	/^int main()$/;"	f
 make	json/json_value.cpp	/^Value& Path::make(Value& root) const {$/;"	f	class:Json::Path
 makePath	json/json_value.cpp	/^void Path::makePath(const String& path, const InArgs& in) {$/;"	f	class:Json::Path
 match	json/json_reader.cpp	/^bool OurReader::match(Location pattern, int patternLength) {$/;"	f	class:Json::OurReader
@@ -319,6 +336,8 @@ minInt	json/json_value.cpp	/^const Int Value::minInt = Int(~(UInt(-1) \/ 2));$/;
 minInt64	json/json_value.cpp	/^const Int64 Value::minInt64 = Int64(~(UInt64(-1) \/ 2));$/;"	m	class:Json::Value	file:
 minLargestInt	json/json_value.cpp	/^const LargestInt Value::minLargestInt = LargestInt(~(LargestUInt(-1) \/ 2));$/;"	m	class:Json::Value	file:
 mm	Acceptor.cc	/^namespace mm$/;"	n	file:
+mm	Cache.cc	/^namespace mm$/;"	n	file:
+mm	CacheManger.cc	/^namespace mm$/;"	n	file:
 mm	Condition.cc	/^namespace mm$/;"	n	file:
 mm	Configuration.cc	/^namespace mm$/;"	n	file:
 mm	DictProducer.cc	/^namespace mm$/;"	n	file:
@@ -336,6 +355,7 @@ mm	TcpConnection.cc	/^namespace mm$/;"	n	file:
 mm	TcpServer.cc	/^namespace mm$/;"	n	file:
 mm	Thread.cc	/^namespace mm$/;"	n	file:
 mm	Threadpool.cc	/^namespace mm $/;"	n	file:
+mm	Timer.cc	/^namespace mm$/;"	n	file:
 msvc_pre1900_c99_snprintf	json/json_value.cpp	/^int JSON_API msvc_pre1900_c99_snprintf(char* outBuf,$/;"	f
 msvc_pre1900_c99_vsnprintf	json/json_value.cpp	/^static int msvc_pre1900_c99_vsnprintf(char* outBuf,$/;"	f	file:
 newCharReader	json/json_reader.cpp	/^CharReader* CharReaderBuilder::newCharReader() const {$/;"	f	class:Json::CharReaderBuilder
@@ -386,12 +406,15 @@ operator []	json/json_value.cpp	/^const Value& Value::operator[](int index) cons
 operator []	json/json_writer.cpp	/^Value& StreamWriterBuilder::operator[](const String& key) {$/;"	f	class:Json::StreamWriterBuilder
 operator bool	json/json_value.cpp	/^Value::operator bool() const { return !isNull(); }$/;"	f	class:Json::Value
 override	json/json_writer.cpp	/^  int write(Value const& root, OStream* sout) override;$/;"	m	struct:Json::BuiltStyledStreamWriter	file:
+pCacheManger_	CacheManger.cc	/^CacheManger * CacheManger::pCacheManger_=createCacheManger();\/\/饱汉模式$/;"	m	class:mm::CacheManger	file:
+pConf_	Configuration.cc	/^Configuration * Configuration::pConf_=createConfiguration();\/\/饱汉模式$/;"	m	class:mm::Configuration	file:
 pMydict_	Mydict.cc	/^Mydict * Mydict::pMydict_=createMydict();\/\/饱汉模式$/;"	m	class:mm::Mydict	file:
 parse	json/json_reader.cpp	/^bool OurReader::parse(const char* beginDoc,$/;"	f	class:Json::OurReader
 parse	json/json_reader.cpp	/^bool Reader::parse(const char* beginDoc,$/;"	f	class:Json::Reader
 parse	json/json_reader.cpp	/^bool Reader::parse(const std::string& document,$/;"	f	class:Json::Reader
 parse	json/json_reader.cpp	/^bool Reader::parse(std::istream& is, Value& root, bool collectComments) {$/;"	f	class:Json::Reader
 parseFromStream	json/json_reader.cpp	/^bool parseFromStream(CharReader::Factory const& fact,$/;"	f	namespace:Json
+periodicUpdate	CacheManger.cc	/^void CacheManger::periodicUpdate()$/;"	f	class:mm::CacheManger
 pop	TaskQueue.cc	/^ElemType TaskQueue::pop()$/;"	f	class:mm::TaskQueue
 port	InetAddress.cc	/^unsigned short InetAddress::port() const$/;"	f	class:mm::InetAddress
 precisionType_	json/json_writer.cpp	/^  PrecisionType precisionType_;$/;"	m	struct:Json::BuiltStyledStreamWriter	file:
@@ -414,6 +437,7 @@ readComment	json/json_reader.cpp	/^bool OurReader::readComment() {$/;"	f	class:J
 readComment	json/json_reader.cpp	/^bool Reader::readComment() {$/;"	f	class:Json::Reader
 readCppStyleComment	json/json_reader.cpp	/^bool OurReader::readCppStyleComment() {$/;"	f	class:Json::OurReader
 readCppStyleComment	json/json_reader.cpp	/^bool Reader::readCppStyleComment() {$/;"	f	class:Json::Reader
+readFromFile	CacheManger.cc	/^void CacheManger::readFromFile()$/;"	f	class:mm::CacheManger
 readNumber	json/json_reader.cpp	/^bool OurReader::readNumber(bool checkInf) {$/;"	f	class:Json::OurReader
 readNumber	json/json_reader.cpp	/^void Reader::readNumber() {$/;"	f	class:Json::Reader
 readObject	json/json_reader.cpp	/^bool OurReader::readObject(Token& token) {$/;"	f	class:Json::OurReader
@@ -455,6 +479,7 @@ resolveReference	json/json_value.cpp	/^Value& Value::resolveReference(char const
 resolveReference	json/json_value.cpp	/^Value& Value::resolveReference(const char* key) {$/;"	f	class:Json::Value
 rightMargin_	json/json_writer.cpp	/^  unsigned int rightMargin_;$/;"	m	struct:Json::BuiltStyledStreamWriter	file:
 runInLoop	EventLoop.cc	/^void EventLoop::runInLoop(Functor && cb)$/;"	f	class:mm::EventLoop
+runInThread	Thread.cc	/^    void runInThread()$/;"	f	struct:mm::ThreadData
 send	TcpConnection.cc	/^void TcpConnection::send(const string & msg)$/;"	f	class:mm::TcpConnection
 sendInLoop	TcpConnection.cc	/^void TcpConnection::sendInLoop(const string & msg)$/;"	f	class:mm::TcpConnection
 set	json/json_value.cpp	/^void Value::Comments::set(CommentPlacement slot, String comment) {$/;"	f	class:Json::Value::Comments
@@ -471,6 +496,7 @@ setOffsetLimit	json/json_value.cpp	/^void Value::setOffsetLimit(ptrdiff_t limit)
 setOffsetStart	json/json_value.cpp	/^void Value::setOffsetStart(ptrdiff_t start) { start_ = start; }$/;"	f	class:Json::Value
 setReuseAddr	Acceptor.cc	/^void Acceptor::setReuseAddr(bool on)$/;"	f	class:mm::Acceptor
 setReusePort	Acceptor.cc	/^void Acceptor::setReusePort(bool on)$/;"	f	class:mm::Acceptor
+setTimer	Timer.cc	/^void Timer::setTimer(int initTime,int intervalTime)$/;"	f	class:mm::Timer
 show_conf	Configuration.cc	/^void Configuration::show_conf()const$/;"	f	class:mm::Configuration
 show_dict	DictProducer.cc	/^void DictProducer::show_dict()const$/;"	f	class:mm::DictProducer
 show_dict	Mydict.cc	/^void Mydict::show_dict()const$/;"	f	class:mm::Mydict
@@ -490,9 +516,11 @@ start	SpellCorrectServer.cc	/^void SpellcorrectServer::start()$/;"	f	class:mm::S
 start	TcpServer.cc	/^void TcpServer::start()$/;"	f	class:mm::TcpServer
 start	Thread.cc	/^void Thread::start()$/;"	f	class:mm::Thread
 start	Threadpool.cc	/^void Threadpool::start()$/;"	f	class:mm::Threadpool
+start	Timer.cc	/^void Timer::start()$/;"	f	class:mm::Timer
 start_	json/json_reader.cpp	/^    Location start_;$/;"	m	class:Json::OurReader::Token	file:
 statistic	MyTask.cc	/^void MyTask::statistic()\/\/计算出下标对应的单词并存储$/;"	f	class:mm::MyTask
 stop	Threadpool.cc	/^void Threadpool::stop()$/;"	f	class:mm::Threadpool
+stop	Timer.cc	/^void Timer::stop()$/;"	f	class:mm::Timer
 store_dict	DictProducer.cc	/^void DictProducer::store_dict(const string filepath)$/;"	f	class:mm::DictProducer
 store_index	IndexProducer.cc	/^void IndexProducer::store_index()$/;"	f	class:mm::IndexProducer
 strictMode	json/json_reader.cpp	/^Features Features::strictMode() {$/;"	f	class:Json::Features
@@ -503,6 +531,7 @@ swap	json/json_value.cpp	/^void Value::swap(Value& other) {$/;"	f	class:Json::Va
 swapPayload	json/json_value.cpp	/^void Value::swapPayload(Value& other) {$/;"	f	class:Json::Value
 threadFunc	Thread.cc	/^void * Thread::threadFunc(void * arg)$/;"	f	class:mm::Thread
 threadFunc	Threadpool.cc	/^void Threadpool::threadFunc()$/;"	f	class:mm::Threadpool
+threadNum	Thread.cc	/^__thread int threadNum=0;$/;"	m	namespace:mm	file:
 throwLogicError	json/json_value.cpp	/^JSONCPP_NORETURN void throwLogicError(String const& msg) {$/;"	f	namespace:Json
 throwRuntimeError	json/json_value.cpp	/^JSONCPP_NORETURN void throwRuntimeError(String const& msg) {$/;"	f	namespace:Json
 toHex16Bit	json/json_writer.cpp	/^static String toHex16Bit(unsigned int x) {$/;"	f	namespace:Json
@@ -567,6 +596,7 @@ writeIndent	json/json_writer.cpp	/^void BuiltStyledStreamWriter::writeIndent() {
 writeIndent	json/json_writer.cpp	/^void StyledStreamWriter::writeIndent() {$/;"	f	class:Json::StyledStreamWriter
 writeIndent	json/json_writer.cpp	/^void StyledWriter::writeIndent() {$/;"	f	class:Json::StyledWriter
 writeString	json/json_writer.cpp	/^String writeString(StreamWriter::Factory const& factory, Value const& root) {$/;"	f	namespace:Json
+writeToFile	CacheManger.cc	/^void CacheManger::writeToFile()$/;"	f	class:mm::CacheManger
 writeTrain	SocketIO.cc	/^int SocketIO::writeTrain(const char * buff)$/;"	f	class:mm::SocketIO
 writeValue	json/json_writer.cpp	/^void BuiltStyledStreamWriter::writeValue(Value const& value) {$/;"	f	class:Json::BuiltStyledStreamWriter
 writeValue	json/json_writer.cpp	/^void FastWriter::writeValue(const Value& value) {$/;"	f	class:Json::FastWriter

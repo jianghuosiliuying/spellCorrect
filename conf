@@ -8,6 +8,5 @@ index /home/chengang/c++/spellCorrect/data/index.dat
 cache /home/chengang/c++/spellCorrect/data/cacheData.dat
 threadNum 4
 queSize 10
-cacheNum 5
 begTime 10
 valTime 10
