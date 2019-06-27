@@ -22,12 +22,12 @@ void Mydict::destory()
     if(pMydict_)
         delete pMydict_;
 }
-void Mydict::initEn(const string dictPath,const string indexPath)
+void Mydict::init(const string dictPath,const string indexPath)
 {
     string word;
     int wordcnt;
     cout<<"will build dict."<<dictPath<<endl;
-    ifstream ifsdict(dictPath);//构建英文词典
+    ifstream ifsdict(dictPath);//构建词典
     while(ifsdict>>word>>wordcnt)
     {
         dict_.push_back(make_pair(word,wordcnt));

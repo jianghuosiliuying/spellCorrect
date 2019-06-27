@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Cache.h"
-#include "MutexLock.h"
 #include <vector>
 #include <string>
 #include <iostream>
@@ -31,7 +30,6 @@ private:
     string cacheFile_;//cache文件存放路径
     int cacheNum_;//cache数目
     int cacheCap_;//cache容量
-    MutexLock mutex_;
     Cache tmplist_;//汇总cache，也是主查询cache
     vector<Cache> cacheList_;//给每个线程一个cache用来存线程产生的热数据
 };

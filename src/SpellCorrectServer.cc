@@ -23,9 +23,9 @@ SpellcorrectServer::SpellcorrectServer(const string & conffileName)
 //,threadpool_(4,10)
 ,server_(conf_->getConfigMap().find("ip")->second,stoi(conf_->getConfigMap().find("port")->second))
 {
-    Mydict * pmydict=Mydict::createMydict();//也可以放到Mydict构造函数里
-    pmydict->initEn(conf_->getConfigMap().find("dict")->second,
-                    conf_->getConfigMap().find("index")->second);//构建英文词典和索引表
+    Mydict * pmydict=Mydict::createMydict();
+    pmydict->init(conf_->getConfigMap().find("dict")->second,
+                    conf_->getConfigMap().find("index")->second);//构建词典和索引表
     threadpool_.start();
     timer_->start();
 }

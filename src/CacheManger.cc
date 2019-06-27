@@ -2,7 +2,6 @@
 
 #include "../include/CacheManger.h"
 #include "../include/Configuration.h"
-#include "../include/MutexLock.h"
 #include <fstream>
 
 using namespace std;
@@ -51,16 +50,6 @@ void CacheManger::readFromFile()
     }
     ifs.close();
 }
-#if 0
-void CacheManger::addHotDate(string word,string json)
-{//添加热数据
-    tmplist_.addElement(word,json);
-}
-string CacheManger::getHotData(string word)
-{
-    return tmplist_.searchElement(word);
-}
-#endif
 void CacheManger::writeToFile()
 {
     cout<<"i will write cache to file."<<endl;
@@ -84,25 +73,23 @@ Cache & CacheManger::getCache(size_t idx)
 void CacheManger::periodicUpdate()
 {
     cout<<"i will read subthread cache."<<endl;
+    for(int i=1;i<=cacheNum_;++i)
     {
-        MutexLockGuard autolock(mutex_);
-        for(int i=1;i<=cacheNum_;++i)
-        {
-            Cache tmp(cacheCap_);
-            tmp=cacheList_[i-1];//读取子线程的热数据
-            cacheList_[i-1]=Cache(cacheCap_);//给子线程一个新cache，清空原有热数据
-            list<pair<string,string>> & tmplist=tmp.getCacheList();
-            for(auto it=tmplist.rbegin();it!=tmplist.rend();++it)
-            {//从尾部向头部遍历链表
-                tmplist_.addElement(it->first,it->second);//直接插入到主cache
-            }
+        Cache tmp(cacheCap_);
+        tmp=cacheList_[i-1];//读取子线程的热数据
+        cacheList_[i-1]=Cache(cacheCap_);//给子线程一个新cache，清空原有热数据
+        list<pair<string,string>> & tmplist=tmp.getCacheList();
+        for(auto it=tmplist.rbegin();it!=tmplist.rend();++it)
+        {//从尾部向头部遍历链表
+            tmplist_.addElement(it->first,it->second);//直接插入到主cache
         }
-    }//缩小锁的范围
+    }
     cout<<"i read subthread cache finish."<<endl;
     writeToFile();//将更新后的cache写回文件
 }
 
-//CacheManger * CacheManger::pCacheManger_=createCacheManger();//饱汉模式
+//因构造函数包含初始化数据，因此不能使用饱汉模式提前创建对象，需要等到configuration单例创建完成再创建
+//CacheManger * CacheManger::pCacheManger_=createCacheManger();
 CacheManger * CacheManger::pCacheManger_=nullptr;//饿汉模式
 
 }//end of namespace mm
