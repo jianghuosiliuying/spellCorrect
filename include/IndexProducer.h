@@ -14,6 +14,7 @@ public:
     IndexProducer(const string & dicpath,const string & indexpath);
     void read_dic();//读取词典
     void build_index();
+    int nBytesCode(const char ch);//获取每个字所占字节数
     void store_index();
     void show_index()const;
 private:

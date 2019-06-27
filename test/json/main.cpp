@@ -1,8 +1,10 @@
+#if 0
 #if defined(__GNUC__)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #elif defined(_MSC_VER)
 #pragma warning(disable : 4996)
+#endif
 #endif
 #include "../../include/json/json.h"
 #include <iostream>
@@ -13,28 +15,35 @@ using namespace std;
 
 string createJson()
 {
-    Json::Value root;
     Json::Value data;
-    ostringstream os;
-    data[0]="hello";
-    data[1]="world";
-    data[2]="fine";
-    root["word"]=data;
+    //ostringstream os;
+    data["word"].append("wordld");
+    //data[0]="world";
+    //data[1]="world";
+    data["word"].append("world");
+    data["word"].append("你好");
+    //data["word"]="fine";
+    //data["word"]="你好";
+    //data[4]="hello";//0.5版json只能从1开始
 #if 0
     Json::StreamWriterBuilder writer;
     unique_ptr<Json::StreamWriter> jsonwriter(writer.newStreamWriter());
     jsonwriter->write(root,&os);
+    string strData=os.str();
+    cout<<strData<<endl;;
+    //const char *str=strData.c_str();
+    //string str1(str);
 #endif
+    //string strData=root.toStyledString();//与上边注释的功能相同，带输出格式的字符串
+#if 1
     Json::FastWriter writer;
-    string strData=writer.write(root);//自带换行
-    //string strData=os.str();
+    string strData=writer.write(data);//自带换行
     cout<<strData;
-    const char *str=strData.c_str();
-    string str1(str);
-    //cout<<strData<<endl;
+#endif
     return strData;
 }
 
+#if 1
 void parseJson1(const string & data)
 {
     Json::Value root,word;
@@ -44,11 +53,16 @@ void parseJson1(const string & data)
     cout<<"similar word:";
     for(unsigned int i=0;i<word.size();++i)
     {
-        cout<<word[i]<<" ";
+        //string words="word"+string(1,'0'+i);
+        //cout<<word[words].asString()<<" ";
+        cout<<word[i].asString()<<" ";
+        //cout<<word[i]<<" ";//不加asString，会自动换行
     }
     cout<<endl;
 }
+#endif
 
+#if 0//1.8版json
 bool parseJson(const string & data)
 {
     if(data.empty())
@@ -66,17 +80,19 @@ bool parseJson(const string & data)
     cout<<"similar word:";
     for(unsigned int i=0;i<word.size();++i)
     {
-        cout<<word[i]<<" ";
+        cout<<word[i].asString()<<" ";//自动将中文转为utf-8输出
+        //cout<<word[i]<<" ";
     }
     cout<<endl;
     return true;
 }
+#endif
 
 int main()
 {
     string word=createJson();
-    parseJson(word);
-    //parseJson1(word);
+    //parseJson(word);
+    parseJson1(word);
     return 0;
 }
 

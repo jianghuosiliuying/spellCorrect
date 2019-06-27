@@ -41,12 +41,12 @@ public:
 
 	//运行在线程池的某一个子线程中
 	void process();
-    //void execute(Cache & cache);//执行查询
     void queryIndexTable();//查询索引
     void statistic();//计算出下标对应的单词并存储
+    int nBytesCode(const char ch);//获取每个字所占字节数
+    int length(const string & str);//获取单词长度
     int distance(const string & rhs);//计算最小编辑距离
     void createJson(string & response);//创建json字符串
-    //void response(Cache & cache);//响应客户端请求
 private:
 	string _msg;//等待查询的单词
 	TcpConnectionPtr _conn;

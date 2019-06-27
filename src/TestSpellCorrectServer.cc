@@ -8,7 +8,7 @@ using namespace mm;
 int main()
 {
     SpellcorrectServer server("../conf");
-    cout<<"1"<<endl;
+    //cout<<"1"<<endl;
 
     server.start();
 

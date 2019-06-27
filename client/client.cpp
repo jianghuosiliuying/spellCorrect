@@ -28,6 +28,24 @@ struct Train
 
 void do_service(int sockfd);
 
+int nBytesCode(const char ch)
+{//计算每个字的长度
+    if(ch & (1<<7))
+    {
+        int nBytes=1;
+        for(int i=0;i!=6;++i)
+        {//utf-8最大占6个字节
+            if(ch & (1<<(6-i))){
+                ++nBytes;
+            }else{
+                break;
+            }
+        }
+        return nBytes;
+    }
+    return 1;
+}
+
 int main(int argc, const char *argv[])
 {
     int peerfd = socket(PF_INET, SOCK_STREAM, 0);
@@ -57,27 +75,18 @@ int main(int argc, const char *argv[])
     return 0;
 }
 
-bool parseJson(const string & data,char * word)
+void parseJson(const string & data,string words)
 {
-    if(data.empty())
-        return false;
-    bool res;
-    JSONCPP_STRING errs;
-    Json::Value root,info;
-    Json::CharReaderBuilder reader;
-    unique_ptr<Json::CharReader> const jsonreaer(reader.newCharReader());
-    res=jsonreaer->parse(data.c_str(),data.c_str()+data.length(),&root,&errs);
-    if(!res||!errs.empty()){
-        cout<<"parseJosn error."<<errs<<endl;
-    }
-    info=root[word];
-    cout<<"similar word:";
-    for(unsigned int i=0;i<info.size();++i)
+    Json::Value root,word;
+    Json::Reader reader;
+    reader.parse(data,root);
+    word=root[words];
+    cout<<"similar word --->";
+    for(unsigned int i=0;i<word.size();++i)
     {
-        cout<<info[i]<<" ";
+        cout<<word[i].asString()<<" ";
     }
     cout<<endl;
-    return true;
 }
 
 void do_service(int sockfd)
@@ -91,18 +100,26 @@ void do_service(int sockfd)
         struct Train train;
     fgets:
         fgets(sendbuf, sizeof sendbuf, stdin);
-        char word[4096]={0};
-        int k=0;
-        for(int i=0;i<(int)strlen(sendbuf);++i)
-        {
-            if((sendbuf[i]>='a'&&sendbuf[i]<='z')||(sendbuf[i]>='A'&&sendbuf[i]<='Z'))
-                word[k++]=sendbuf[i];
+        //char word[4096]={0};
+        string word;
+        size_t cur=0;
+        string wordString(sendbuf);
+        while(cur!=wordString.size())
+        {//如果是单词，则去掉其中非字母部分
+            int n=nBytesCode(wordString[cur]);
+            string ch=wordString.substr(cur,n);
+            if(n==1 && isalpha(wordString[cur])){
+                word.append(ch);
+            }else if(n>1){//如果是汉字或汉字字符，则加入word
+                word.append(ch);
+            }
+            cur+=n;
         }
-        int len=strlen(word);
+        int len=word.size();
         if(0==len)
             goto fgets;
-        train.dataLen=strlen(word);
-        strcpy(train.buf,word);
+        train.dataLen=word.size();
+        strcpy(train.buf,word.c_str());
         write(sockfd, &train, 4+train.dataLen);//发送单词
 		//sleep(5);
 

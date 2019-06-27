@@ -2,10 +2,10 @@ ip 192.168.80.128
 port 2000
 cnLib /home/chengang/c++/spellCorrect/libs/cnLib
 enLib /home/chengang/c++/spellCorrect/libs/enLib
-dir /home/chengang/c++/spellCorrect/bin
 dict /home/chengang/c++/spellCorrect/data/mydict.dat
 index /home/chengang/c++/spellCorrect/data/index.dat
 cache /home/chengang/c++/spellCorrect/data/cacheData.dat
+cacheCap 100
 threadNum 4
 queSize 10
 begTime 10

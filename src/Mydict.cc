@@ -22,11 +22,12 @@ void Mydict::destory()
     if(pMydict_)
         delete pMydict_;
 }
-void Mydict::initEn(const string dictEnPath,const string indexEnPath)
+void Mydict::initEn(const string dictPath,const string indexPath)
 {
     string word;
     int wordcnt;
-    ifstream ifsdict(dictEnPath);//构建英文词典
+    cout<<"will build dict."<<dictPath<<endl;
+    ifstream ifsdict(dictPath);//构建英文词典
     while(ifsdict>>word>>wordcnt)
     {
         dict_.push_back(make_pair(word,wordcnt));
@@ -34,7 +35,8 @@ void Mydict::initEn(const string dictEnPath,const string indexEnPath)
     ifsdict.close();
     string line;
     int location,k=1;
-    ifstream ifsindex(indexEnPath);//构建索引表
+    cout<<"will build index."<<indexPath<<endl;
+    ifstream ifsindex(indexPath);//构建索引表
     while(getline(ifsindex,line))
     {
         stringstream ss(line);

@@ -27,8 +27,8 @@ private:
 
 private:
     static Mydict * pMydict_;
-    vector<pair<string,int> > dict_;//词典
-    map<string,set<int> > indextable_;//索引表
+    vector<pair<string,int> > dict_;//词典:单词和下标
+    map<string,set<int> > indextable_;//索引表:字母和下标集合
 };
 
 }//end of namespace mm

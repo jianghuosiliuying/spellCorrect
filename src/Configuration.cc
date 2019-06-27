@@ -41,7 +41,6 @@ void Configuration::show_conf()const
     }
 }
 
-//Configuration * Configuration::pConf_=nullptr;//饿汉模式,需先于线程前创建，否则可能存在线程安全
 Configuration * Configuration::pConf_=createConfiguration();//饱汉模式
 
 }//end of namespace mm

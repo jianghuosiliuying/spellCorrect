@@ -14,7 +14,6 @@ class SpellcorrectServer//文本纠错类
 {
 public:
     SpellcorrectServer(const string & conffileName);
-    //SpellcorrectServer();
 	void onConnection(const TcpConnectionPtr & conn);
 	void onMessage(const TcpConnectionPtr & conn);
 	void onClose(const TcpConnectionPtr & conn);
