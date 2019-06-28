@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../include/Threadpool.h"
-#include "../include/TcpServer.h"
+#include "Threadpool.h"
+#include "TcpServer.h"
 //#include "../include/Timer.h"
 
 namespace mm
