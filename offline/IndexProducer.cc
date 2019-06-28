@@ -57,7 +57,7 @@ void IndexProducer::build_index()
             cur+=nBytes;
             mapIndex_[ch].insert(location);//给对应字的set中插入vector的下标
         }
-        location++;
+        ++location;
     }
     cout<<"build_index finish."<<endl;
 }
@@ -93,10 +93,10 @@ void IndexProducer::show_index()const
                     cout<<*iter<<" ";
                     --indexcnt;
                 }else{
-                    cout<<endl;
                     break;
                 }
             }
+            cout<<endl;
             --wordcnt;
         }else{
             break;

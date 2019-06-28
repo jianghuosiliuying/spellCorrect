@@ -87,13 +87,14 @@ void DictProducer::build_Cndict()
     {//遍历每份文件
         cout<<file<<endl;
         ifstream ifs(file);
-        string s;
-        while(ifs>>s)
-        {//读中文进行分词
-            //cout<<"will jieba"<<endl;
-            Jieba jieba(DICT_PATH,HMM_PATH,USER_DICT_PATH,IDF_PATH,STOP_WORD_PATH);
+        string line;
+        Jieba jieba(DICT_PATH,HMM_PATH,USER_DICT_PATH,IDF_PATH,STOP_WORD_PATH);
+        while(ifs>>line)
+        {//读中文进行分词,结巴默认就是每次读一行进行分词,jieba放在循环外面速度很快
+            //cout<<line<<endl;
+            //Jieba jieba(DICT_PATH,HMM_PATH,USER_DICT_PATH,IDF_PATH,STOP_WORD_PATH);
             vector<string> result;
-            jieba.Cut(s,result,true);
+            jieba.Cut(line,result,true);
             for(auto & word:result)
             {
                 ++dict_[word];
@@ -105,6 +106,7 @@ void DictProducer::build_Cndict()
 void DictProducer::store_dict(const string filepath)
 {
 #if 0
+    cout<<"will handle the dict."<<endl;
     map<string,int> dict=dictEn_;
     for(auto & k:dictCn_)
     {//合并中英文词典

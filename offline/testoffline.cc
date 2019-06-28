@@ -17,6 +17,7 @@ int main()
     string filepath=con.find("dict")->second;//英文词频库地址+文件名
     cout<<"1"<<endl;
     //pconf->show_conf();//输出配置文件
+    //cout<<endl;
 #if 0
     DictProducer dict;//构建中英文词典目录
     dict.build_Endict();//构建英文词典
@@ -30,10 +31,12 @@ int main()
     index.read_dic();
     index.build_index();
     index.store_index();
-    //index.show_index();//输出10个字母和对应前10个index
+    index.show_index();//输出10个字母和对应前10个index
+    cout<<endl;
     Mydict * mydict=Mydict::createMydict();
-    mydict->initEn(filepath,indexpath);
+    mydict->init(filepath,indexpath);
     mydict->show_dict();
+    cout<<endl;
     mydict->show_index();
 #endif
     return 0;
