@@ -77,14 +77,16 @@ int main(int argc, const char *argv[])
 
 void parseJson(const string & data,string words)
 {
-    Json::Value root,word;
+    //Json::Value root,word;
+    Json::Value root;
     Json::Reader reader;
     reader.parse(data,root);
-    word=root[words];
+    //word=root[words];
     cout<<"similar word --->";
-    for(unsigned int i=0;i<word.size();++i)
+    for(unsigned int i=0;i<root[words].size();++i)
     {
-        cout<<word[i].asString()<<" ";
+        cout<<root[words][i].asString()<<" ";
+        //cout<<word[i].asString()<<" ";
     }
     cout<<endl;
 }

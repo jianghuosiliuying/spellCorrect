@@ -49,13 +49,14 @@ void parseJson1(const string & data)
     Json::Value root,word;
     Json::Reader reader;
     reader.parse(data,root);
-    word=root["word"];
+    //word=root["word"];
     cout<<"similar word:";
-    for(unsigned int i=0;i<word.size();++i)
+    //for(unsigned int i=0;i<word.size();++i)
+    for(unsigned int i=0;i<root["word"].size();++i)
     {
         //string words="word"+string(1,'0'+i);
         //cout<<word[words].asString()<<" ";
-        cout<<word[i].asString()<<" ";
+        cout<<root["word"][i].asString()<<" ";
         //cout<<word[i]<<" ";//不加asString，会自动换行
     }
     cout<<endl;
