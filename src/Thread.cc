@@ -56,14 +56,17 @@ void * Thread::threadFunc(void * arg)
 
 void Thread::join()
 {
-	if(_isRunning)
+	if(_isRunning){
 		pthread_join(_pthid, NULL);
+        _isRunning=false;
+    }
 }
 
 Thread::~Thread()
 {
 	if(_isRunning) {
 		pthread_detach(_pthid);	
+        _isRunning=false;
 	}
 	cout <<threadNum<< "~Thread()" << endl;
 }
